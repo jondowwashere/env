@@ -1,0 +1,33 @@
+# /etc/ldap/slapd.d/groups.ldif
+
+# IT DEPARTMENT
+dn: cn=it,ou=groups,dc=domain,dc=ext
+objectClass: posixGroup
+objectClass: top
+cn: it
+gidNumber: 20001
+description: it department
+
+# EXECUTIVE DEPARTMENT
+dn: cn=executive,ou=groups,dc=domain,dc=ext
+objectClass: posixGroup
+objectClass: top
+cn: executive
+gidNumber: 20002
+description: executive department
+
+# ADMINISTRATION DEPARTMENT
+dn: cn=administration,ou=groups,dc=domain,dc=ext
+objectClass: posixGroup
+objectClass: top
+cn: administration
+gidNumber: 20003
+description: administration department
+
+# SALES DEPARTMENT
+dn: cn=sales,ou=groups,dc=domain,dc=ext
+objectClass: posixGroup
+objectClass: top
+cn: sales
+gidNumber: 20004
+description: sales department

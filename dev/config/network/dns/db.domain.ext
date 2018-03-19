@@ -1,0 +1,20 @@
+$ORIGIN .
+$TTL 604800	; 1 week
+domain.ext		IN SOA	server.domain.ext. root.domain.ext. (
+				22         ; serial
+				604800     ; refresh (1 week)
+				86400      ; retry (1 day)
+				2419200    ; expire (4 weeks)
+				604800     ; minimum (1 week)
+				)
+			NS		server.domain.ext.
+			MX	10	db.domain.ext.
+			A		1.1.1.1
+$ORIGIN domain.ext.
+$TTL 300	; 5 minutes
+android-c45a76b99a17a29c A	1.1.1.3
+			TXT	"00b63d16471d6be9bebccd44d3fea6d2cb"
+client			A	1.1.1.2
+			TXT	"0064d16b549c8c74af8b51682460b96503"
+$TTL 604800	; 1 week
+server			A	1.1.1.1

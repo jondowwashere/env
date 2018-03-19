@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# This software is under the terms of the GNU General Public License v3
+
+# Name: closevm
+# Usage: [bash\s|\./]closevm [debian|bashserver|puppetserver|lamp|nagios|erpnext]
+# Description: 
+
+# CLOSE VIRTUAL MACHINE
+MACHINE=$1
+VBoxManage controlvm $MACHINE acpipowerbutton

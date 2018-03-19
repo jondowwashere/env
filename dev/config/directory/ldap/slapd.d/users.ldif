@@ -1,0 +1,37 @@
+# /etc/ldap/slapd.d/users.ldif
+
+# FRANK ADAMS
+dn: uid=fadams,ou=users,dc=domain,dc=ext
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: top
+uid: fadams
+cn: Frank
+sn: Adams
+homePhone: +10 153 884 692
+mail: fadams@domain.ext
+homeDirectory: /home/users/fadams
+loginShell: /bin/bash
+uidNumber: 10001
+gidNumber: 20001
+userPassword: {SSHA}I7D49MLaHk46qRpQgtgEyhuTIyxkVB6F
+
+# ANNE MANDELAY
+dn: uid=amandelay,ou=users,dc=domain,dc=ext
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: top
+uid: amandelay
+cn: Anne
+sn: Mandelay
+homePhone: +10 379 427 557
+mail: amandelay@domain.ext
+homeDirectory: /home/users/amandelay
+loginShell: /bin/bash
+uidNumber: 10002
+gidNumber: 20002
+userPassword: {SSHA}I7D49MLaHk46qRpQgtgEyhuTIyxkVB6F

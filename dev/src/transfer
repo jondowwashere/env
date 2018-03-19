@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+# This software is under the terms of the GNU General Public License v3
+
+# Name: transfer
+# Usage: [python\s|\./]transfer [configs|installs|modules] [bashserver|puppetserver|lamp|nagios|erpnext]
+# Description: Copies files specified by parameter1 to virtual machine specified by parameter2.
+
+import sys
+import os
+
+# LOCAL VARIABLES
+files = sys.argv[1]
+machine = sys.argv[2]
+
+# GET HOST MACHINE DIRECTORY
+current_path = os.getcwd()
+file = ''.join(current_path)
+file += '/files'
+if files == 'configs':
+    file += '/configs/'
+if files == 'installs':
+    file += '/installs/'
+if files == 'modules':
+    file += '/modules/'
+file += machine+'/*'
+
+# GET HOST ADDRESS
+if machine == 'debian':
+    machine = '192.168.1.10'
+if machine == 'server':
+       if files == 'configs':
+            machine = '192.168.1.10'
+       else:
+            machine = '192.168.1.11'
+if machine in ['pc01', 'pc02', 'pc03', 'pc04', 'pc05']:
+       if files == 'configs':
+            machine = '192.168.1.100'
+
+# COPY FILES TO GUEST MACHINE
+#if machine in ['192.168.1.10', '192.168.1.11']:
+#    command = 'scp'+' '+'-r'+' '+file+' '+'root'+'@'+machine+':/'
+#if machine == '192.168.1.100':
+#    command = 'scp'+' '+'-r'+' '+file+' '+'ubuntu'+'@'+machine+':/'
+command = 'scp'+' '+'-r'+' '+file+' '+'root'+'@'+machine+':/'
+os.system(command)

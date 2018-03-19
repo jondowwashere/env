@@ -1,0 +1,558 @@
+#+AUTHOR: joan carles llompart i seguí
+#+EMAIL: jcllompart@gmail.com
+#+SEQ_TODO: TODO(t) WAITING(w) | DONE(d) CANCELLED(c) 
+#+LaTeX_HEADER: \usepackage{indentfirst}
+#+LaTeX_HEADER: \hypersetup{colorlinks=true, citecolor=black, filecolor=black, linkcolor=black, urlcolor=black}
+
+* About
+Petit projecte que explica com implementar un sistema informàtic GNU/Linux dins una petita empresa.
+En concret, el projecte mostra com crear un servidor i implementar-hi els serveis de xarxa, autenticació, sistema de fitxers i distribució de programari.
+Es proveeix també d'eines per simular el projecte en màquines virtuals abans de posar-lo en producció.
+* Taula de continguts 							:TOC:
+ - [[#about][About]]
+ - [[#introducció][Introducció]]
+   - [[#context-i-justificació-del-treball][Context i justificació del treball]]
+   - [[#objectius-del-treball][Objectius del treball]]
+   - [[#enfocament-i-mètode-seguit][Enfocament i mètode seguit]]
+   - [[#planificació-del-treball][Planificació del treball]]
+   - [[#sumari-de-productes-obtinguts][Sumari de productes obtinguts]]
+   - [[#descripció-dels-capítols-de-la-memòria][Descripció dels capítols de la memòria]]
+ - [[#capítols][Capítols]]
+   - [[#eines][Eines]]
+   - [[#xarxa][Xarxa]]
+   - [[#autenticació][Autenticació]]
+   - [[#sistema-de-fitxers][Sistema de fitxers]]
+   - [[#programari][Programari]]
+ - [[#conclusions][Conclusions]]
+ - [[#glossari][Glossari]]
+ - [[#bibliografia][Bibliografia]]
+ - [[#annexos][Annexos]]
+
+* Introducció
+** DONE Context i justificació del treball
+
+   CLOSED: [2017-04-10 Mon 12:32]
+
+Se suposa el següent escenari fictici. Una empresa X de nova constitució es veu en la necessitat d'instal·lar un sistema informàtic. Després de valorar les diferents opcions, decideix optar per un entorn linux.
+
+Pel que fa al maquinari inicial, l'empresa haurà de fer una despesa inicial per a la compra de 20 ordinadors i 1 servidor, a part de la infrastructura pròpia de telecomunicacions.
+
+Quant a l'entorn linux, s'han valorat les distribucions més importants que hi ha actualment al mercat, s'ha optat per Debian en el servidor i Ubuntu als escriptoris.
+
+En la tria d'aquests sistemes operatius s'han tengut en compte aspectes com la fiabilitat, interoperabilitat i facilitat de maneig.
+
+Debian i Ubuntu formen un bon conjunt per als requeriments de l'empresa. Ubuntu és la distribució linux molt extesa, àmpliament usada per als ordinadors tipus escriptori, de fàcil instal·lació, i amb una interfície d'usuari amigable. Per ser un sistema operatiu derivat de Debian, usa el sistema de paquets /dpkg/, la qual cosa aportarà una interoperabilitat completa entre el servidor i els ordinadors de sobretaula. Aquesta característica, en principi, no afecta el sistema en conjunt, però sí és cert que fa l'administració del sistema més senzilla. En canvi, es tria Debian per al servidor perquè és una distribució molt testejada i fiable, i no instal·la paqueteria extra com és el cas d'Ubuntu.
+
+S'han descartat altres distribucions, com ara CentOS o ArchLinux, perquè si bé són distribucions amb característiques que els fan potents, no són tan fàcils de manejar a nivell d'usuari com les distribucions Ubuntu.
+** DONE Objectius del treball
+
+   CLOSED: [2017-04-10 Mon 12:32]
+
+Per a què aquest objectiu principal s'assoleixi, s'hauran d'aconseguir els objectius parcials següents:
+
+- Creació d'un servidor GNU/Linux amb serveis de:
+   + Xarxa: DNS (Domain Name System), DHCP (Dynamic Host Configuration Protocol) i NTP (Network Time Protocol).
+   + Directori: OpenLDAP (Open LightWeight Directory Access Protocol).
+   + Autenticació: PAM (Pluggable Authentication Modules).
+   + Arxius: NFS (Network File System).
+   + Distribució de Programari: Puppet.
+
+- Creació de vàries estacions de treball GNU/Linux amb:
+   + Login remot: ssh, vinagre.
+   + Client de programari: puppet.
+** DONE Enfocament i mètode seguit
+
+   CLOSED: [2017-04-10 Mon 12:33]
+
+A l'hora de crear la infraestructura, s'empraran màquines virtuals que emularan dita infraestructura dins l'empresa. Per a la creació de les màquines s'utilitzarà un programari -scripts- especial ja es va implementar en el =tfg= del passat semestre, i que afavoreix en gran mesura la creació i/o manipulació de màquines virtuals. De fet, quan es crea una màquina virtual, el que es fa realment és clonar-ne una pre-concebuda amb un determinat sistema operatiu, aleshores aconseguir una màquina virtual amb un sistema operatiu determinat resulta extramadament senzill. El llistat d'aquests scripts està disponible en els annexos.
+
+La feina més important és la que es durà a terme en el servidor. Per tant, primer es començarà creant una màquina virtual amb Debian per a després passar a instal·lar els serveis necessaris. En molts casos, per provar que els serveis funcionen, serà necessària la creació d'una màquina client; aquesta màquina client anirà provista d'un sistema operatiu Ubuntu.
+** DONE Planificació del treball
+
+   CLOSED: [2017-04-14 Fri 12:43]
+
+# #+CAPTION: planficació
+# [[./img/planificacio.png]]
+#+HTML: <p align="middle"><img src="./img/planificacio.png" width="800" height="300"></p><p align="center">Figura 1: planficació</p>
+** TODO Sumari de productes obtinguts
+** TODO Descripció dels capítols de la memòria
+* Capítols
+** Eines
+Aquest capítol es dedicarà a la descripció de les eines que s'utilitzaran per a l'elaboració del projecte. S'usaran altres eines, com kdenlive per editar vídeo, o vokoscreen per crear-ne, però el seu ús serà més específic.
+*** DONE GNU Emacs
+
+    CLOSED: [2017-04-10 Mon 14:37]
+
+[[https://www.gnu.org/software/emacs/][GNU Emacs]] [1], com enuncia la pàgina oficial, és un editor de text lliure [2], extensible, personalitzable, i més. En la comunitat d'usuaris de Unix/Linux se'l califica com un petit sistema operatiu al que li manca un bon editor de textos -en clara referència a Vi-. S'han intentat fer branques d'Emacs per emular Vi en forma nativa, però o bé no són estables o bé els projectes estan aturats. Actualment existeix el paquet Evil que emula Vi dins Emacs. Aquesta és una molt bona solució per als usuaris que tenen memoritzada la musculatura de Vi.
+Un servidor definiria Emacs com l'aplicació que s'obre quan s'obre l'ordinador, que l'ajuda en totes les tasques, i es tanca quan es tanca l'ordinador.
+En concret, dins Emacs s'usaran les eines següents:
+- *evil*: per a edició en mode vi. Eina bàsica per als usuaris que vénen de Vi.
+- *org*: per a edició, que-fers, agenda, projectes, etc. Eina bàsica dins Emacs.
+- *babel*: per extreure el codi font dels fitxers org i ficar-lo als corresponents fitxers marcats pel tangle. Característica interessant del /literate programming/.
+- *dired*: per a navegació, execució de programes, edició del sistema de fitxers, creació directoris, moviments, etc. Eina molt potent que s'empra constantment. 
+- *eshell*: per a ús de shells emacs. Emacs també porta shells natives, però eshell aporta comandes atractives. Es poden llançar tantes eshells com es vulgui dins emacs.
+- *latex*: per a publicacions en html, pdf, etc.
+- *beamer*: per fer presentacions dins emacs.
+- *tramp*: per a connexions remotes. Fa servir ssh, amb l'afegit que es té emacs per treballar en remot.
+- *undo-tree*: arbre de canvis. El més potent arbre de canvi que s'hagi vist mai. Fa i desfa qualsevol buffer -bé sigui una shell, un fitxer, etc.- en el temps, amb totes les branques possibles de canvis que s'hagin pogut fer en cada buffer.
+- *magit*: embolcall git per a emacs. El més potent embolcall de git. Es poden executar fins al 90% de les comandes natives de git.
+- *google-it*: implementació d'una funció per googlejar tires de text dins emacs.
+
+# #+CAPTION: editant amb Emacs
+# [[./img/emacs.png]]
+#+HTML: <p align="middle"><img src="./img/emacs.png" width="500" height="250"></p><p align="center">Figura 2: editant amb Emacs</p>
+
+
+Dins emacs s'empraran altres eines, però s'enumeren aquestes per la seva rellevància en l'elaboració del projecte.
+
+[1] GNU Emacs té llicència GNU General Public License versió 2.
+
+[2] Software /lliure/ no és el mateix que software /open source/. Vegeu /[[https://www.gnu.org/philosophy/free-software-for-freedom.html][gnu.org]]/.
+*** DONE Vi
+
+    CLOSED: [2017-04-10 Mon 12:34]
+
+[[https://en.wikipedia.org/wiki/Vi][Vi]] [3], com diu la Wikipèdia, és un editor de textos lliure que es troba en gairebé tots els sistemes Unix. Per això és important conèixer Vi, perquè sempre estarà disponible en qualsevol distribució Unix/Linux; apart de ser, probablement, el millor editor de textos que existeixi.
+
+
+Vi pràcticament no s'usarà, atès que s'usarà l'eina tramp, abans mencionada, per a connexions remotes, i així poder usar emacs dins sistemes remots. Així i tot, no es descarta el seu ús específic en moments concrets, o quan no sigui possible una connexió a una ip determinada.
+
+# #+CAPTION: editant amb Vi
+# [[./img/vi.png]]
+#+HTML: <p align="middle"><img src="./img/vi.png" width="500" height="250"></p><p align="center">Figura 3: editant amb Vi</p>
+
+[3] Vi té llicència Berkeley Software Distribution.
+*** DONE VirtualBox
+
+    CLOSED: [2017-04-10 Mon 12:34]
+
+Segons la [[https://ca.wikipedia.org/wiki/VirtualBox][Wikipèdia]], VirtualBox és un hipervisor per a ordinadors x86/AMD64 d'Oracle Corporation... amb el qual és possible instal·lar sistemes operatius addicionals, coneguts com a "sistemes convidats", dins d'un altre sistema operatiu "amfitrió".
+
+Segons [[https://www.virtualbox.org/][VirtualBox]] [4], és l'única solució professional que està lliurement disponible com a programari de codi obert.
+
+# #+CAPTION: capa de virtualització
+# [[./img/virtualbox.png]]
+#+HTML: <p align="middle"><img src="./img/virtualbox.png" width="400" height="200"></p><p align="center">Figura 4: capa de virtualització</p>
+
+[4] VirtualBox es troba sota una llicència privativa d'Oracle, o bé sota una llicència lliure GNU GPLv2 de VirtualBox OSE.
+*** DONE Scripts
+
+    CLOSED: [2017-04-10 Mon 13:38]
+
+S'empraran una sèrie d'scripts per afavorir la creació de màquines virtuals amb sistemes operatius predeterminats, per a connexions amb ssh -en cas que no es faci mitjançant tramp-, per a transferència de fitxers de configuració, etc.
+
+En concret, els scripts que s'utilitzaran són els següents:
+- *clonevm*: crea una màquina virtual amb un sistema operatiu predeterminat. La sintaxi és =[\s|\./]clonevm [nom_mv_a_clonar] [nom_nova_mv]=.
+- *closevm*: apaga la màquina virtual. La sintaxi és =[\s|\./]closevm [nom_mv]=.
+- *connectvm*: es crea una connexió via ssh a una màquina virtual. La sintaxi és =[\s|\./]connectvm [nom_mv]=.
+- *network*: script necessari per realitzar el binding entre el nom de la màquina virtual i la corresponent ip. La sintaxi és =[python\s|\./]network [nom_mv]=.
+- *registervm*: registra una màquina virtual a l'hipervisor de VirtualBox. La sintaxi és =[\s|\./]registervm [nom_mv]=.
+- *startvm*: encén una màquina virtual. La sintaxi és =[\s|\./]startvm [nom_mv]=.
+- *transfer*: transfereix fitxers de la màquina local a la màquina remota via ssh, gràcies a la utilitat scp. La sintaxi és =[python\s|\./]transfer [configs|installs|modules]connectvm [nom_mv]=.
+- *unregistervm*: anul·la la inscripció a l'hipervisor. La sintaxi és =[\s|\./]connectvm [nom_mv]=.
+** Xarxa
+Aquí comença el desenvolupament del projecte. Un cop creada la màquina Debian que farà el rol de servidor, el primer que caldrà fer serà la instal·lació d'uns serveis mínims de xarxa. En concret, s'instal·larà =dns=, =dhcp= i =ntp=.
+*** DONE DNS
+
+    CLOSED: [2017-04-11 Tue 20:11] DEADLINE: <2017-04-11 Tue> SCHEDULED: <2017-04-10 Mon>
+
+# https://wiki.debian.org/Bind9
+# http://www.linuxuserexpo.com/2015/03/como-instalar-un-servidor-dns-en-linux/
+# [[http://www.thegeekstuff.com/2014/01/install-dns-server]]
+# https://www.safaribooksonline.com/library/view/dns-bind/0596004109/ch05s03.html
+
+El /Domain Name Server/, per les seves sigles en anglès, és un sistema que assigna noms a adreces ip. Cal destacar, però, la jerarquia en forma d'arbre amb la que s'ha construït dit servei -el mateix patró s'utilitza al sistema de fitxers de Unix-. Cada nom -domini per ser més acurat- es troba dins una branca de la jerarquia. Així, per a què un domini es pugui trobar cal baixar per l'arbre des de l'arrel fins arribar al domini pròpiament dit -lloc on habita el servidor autoritari per a aquest domini-.
+Per exemple, el nom de domini =es.wikipedia.org= es correspon amb =es.wikipedia.org.= a l'arbre dns.
+
+# #+CAPTION: es.wikipedia.org dins arbre dns
+# [[./img/dns.png]]
+#+HTML: <p align="middle"><img src="./img/dns.png" width="400" height="200"></p><p align="center">Figura 5: es.wikipedia.org dins arbre dns</p>
+
+[[https://www.isc.org/downloads/bind/][Bind]] [5] és la implementació més usada del protocol stàndard DNS, mantinguda per l'[[https://www.isc.org/downloads/bind/][Internet Systems Consortium]]. Actualment s'utilitza la versió Bind9, que és una reescriptura nova del codi amb millores en temes de seguretat.
+Les passes que cal fer per oferir el servei de dns són:
+1. INSTAL·LAR BIND9
+2. CONFIGURAR BIND9
+3. LLANÇAR BIND9
+Aquestes 3 passes formen un patró típic en les tasques d'instal·lació d'un servei per part de l'administrador de sistemes. Per tant, en els pròxims capítols, quan es parli d'instal·lar un servei, es donarà per entès que se seguiran dites passes.
+
+[5] Bind es troba sota llicència [[https://www.isc.org/downloads/software-support-policy/isc-license/][ISC License]]. Les versions iguals o posteriors a Bind 9.11.0b es troben baix llicència [[https://www.mozilla.org/en-US/MPL/2.0/FAQ/][Mozilla Public License 2.0]].
+
+
+1- INSTAL·LAR BIND9
+
+L'script d'instal·lació diu així:
+#+BEGIN_EXAMPLE
+/tmp/install-bind.sh
+#+END_EXAMPLE
+#+BEGIN_SRC python :tangle ./dev/config/network/dns/install-bind.py
+#!/usr/bin/env python
+import os
+command1 = 'apt-get update'
+command2 = 'apt-get install -y bind9'
+commands = command1+'\n'+command2
+os.system(commands)
+#+END_SRC
+Per llançar l'script d'instal·lació cal obrir un terminal i executar el codi següent:
+#+BEGIN_SRC 
+$ chmod +r /tmp/install-bind.py && /tmp/install-bind.py
+#+END_SRC
+
+2- CONFIGURAR BIND9
+
+Per configurar el servidor dns cal fer les configuracions següents:
+1. Servidor cache.
+2. Servidor primari.
+3. Zona directa.
+4. Zona inversa.
+
+1- Servidor cache:
+
+Servidor que guarda les consultes a altres servidors dns dins un fitxer cau. Aquest fitxer cau s'actualitza de forma periòdica. Per configurar la cache cal editar el fitxer =/etc/bind/named.conf.options/=:
+#+BEGIN_EXAMPLE
+# /etc/bind/named.conf.options
+#+END_EXAMPLE
+#+BEGIN_SRC sh :tangle ./dev/config/network/dns/named.conf.options
+include "/etc/bind/named.conf.options";
+include "/etc/bind/named.conf.local";
+include "/etc/bind/named.conf.default-zones";
+root@server:/etc/bind
+options {
+        directory "/var/cache/bind";
+        # google dns servers
+        forwarders {
+           8.8.8.8;
+           8.8.4.4;
+        };
+        dnssec-enable no;
+        dnssec-validation no;
+        auth-nxdomain no;
+        listen-on-v6 { any; };
+        listen-on port 53 { 127.0.0.1; 192.168.1.2; };
+};
+#+END_SRC
+En aquest fitxer només cal descomentar l'apartat /forwarders/ i inserir el servidor dns del proveïdor d'Internet, o qualsevol altre servidor de dns públic. En aquest cas, s'han inserit els de google.
+
+2- Servidor de noms primari:
+
+El pas següent és configurar bind9 per a què sigui el servidor primari per al domini/zona /domain.ext/. Cal afegir, doncs, les resolucions directa i inversa per a la zona /domain.ext/:
+#+BEGIN_EXAMPLE
+# /etc/bind/named.conf.local
+#+END_EXAMPLE
+#+BEGIN_SRC sh :tangle ./dev/config/network/dns/named.conf.local
+zone "domain.ext" {
+     type master;
+     file "/etc/bind/db.domain.ext";
+     #allow-update { key "rndc.key"; };
+     notify yes;
+}
+
+zone "1.168.192.in-addr.arpa" {
+     type master;
+     file "/etc/bind/db.1.168.192";
+     #allow-update { key "rndc.key"; };
+     notify yes;
+}
+#+END_SRC
+En aquest fitxer s'especifiquen les resolucions directa i inversa per al domini /domain.ext/, i els dos fitxers on es troben tots els bindings -directe i invers- per a cada màquina que operi dins aquest domini.
+
+3- Zona directa:
+
+El fitxer de resolució de zona directa és allà on se citaran les màquines que hi hagi dins el domini, amb el corresponent binding d'ip:
+#+BEGIN_EXAMPLE
+# /etc/bind/db.domain.ext
+#+END_EXAMPLE
+#+BEGIN_SRC sh :tangle ./dev/config/network/dns/db.domain.ext
+$TTL	86400
+@                      IN        SOA         server.domain.ext. admin.domain.ext. (
+                            20170325         ; Serial Number
+                                3600         ; Refresh 1h
+                                3600         ; Retry 1h
+                               86400         ; Expire 1d
+                                3600 )       ; Negative Caching TTL 1h
+;
+@                      IN        NS          server.domain.ext.
+@                      IN        MX    10    server.domain.ext.
+
+server                 IN        A           192.168.1.11
+#+END_SRC
+
+4. Zona inversa:
+
+El fitxer de zona inversa ha de tenir tantes entrades d'apuntadors -PTR- com entrades d'adreces -A- tengui el fitxer de zona directa:
+#+BEGIN_EXAMPLE
+/etc/bind/db.1.168.192
+#+END_EXAMPLE
+#+BEGIN_SRC sh :tangle ./dev/config/network/dns/db.1.168.192
+$TTL	86400
+@                      IN        SOA         server.domain.ext. admin.domain.ext. (
+                            20170325         ; Serial Number
+                                3600         ; Refresh 1h
+                                3600         ; Retry 1h
+                               86400         ; Expire 1d
+                                3600 )       ; Negative Caching TTL 1h
+;
+@                      IN        NS          server.domain.ext.
+
+11                     IN        PTR         server.domain.ext.
+#+END_SRC
+
+3- LLANÇAR BIND9
+
+Abans de llançar, cal comentar que bind9 proveeix dos programes per avaluar la correcció en la sintaxi en els fitxers /named.conf/ i els corresponents fitxers de zona. Així doncs, cal obrir un terminal i executar les ordres següents:
+#+BEGIN_SRC 
+$ named-checkconf /etc/bind/named.conf
+$ named-checkzone domain.ext /etc/bin/db.domain.exten
+$ named-checkzone 1.168.192 /etc/bind/db.1.168.192
+#+END_SRC
+Un cop comprovat que no hi ha erros, és l'hora d'engegar el dimoni, des d'un terminal o des d'emacs -amb emacs existeixen altres possibilitats d'engegar el dimoni sense una shell-:
+#+BEGIN_SRC 
+$ systemctl restart bind9.service
+#+END_SRC
+Una petita comprovació de què el sistema funciona correctament és fent:
+#+BEGIN_SRC 
+$ dig archlinux.com
+#+END_SRC
+*** DONE DHCP
+
+    CLOSED: [2017-04-12 Wed 18:26] DEADLINE: <2017-04-11 Tue> SCHEDULED: <2017-04-11 Tue>
+
+# https://www.ostechnix.com/install-dhcp-server-in-ubuntu-16-04/
+
+El =Dynamic Host Control Protcol=, o [[https://www.isc.org/downloads/dhcp/][DHCP]] [6] , és un protocol estàndard, la qual funció principal és la de dessignar de forma dinàmica adrecess IP als ordinadors de la xarxa. Si no opera un servidor de DHCP dins la xarxa, llavors les configuracions de xarxa s'han de realitzar manualment.
+La implementació del protocol DHCP, mantinguda per l'[[https://www.isc.org/downloads/bind/][Internet Systems Consortium]], porta el mateix nom que el protocol. ISC ha desenvolupant una nova implementació del protocol, anomenada Kea, que no serà la que s'instal·larà, atès que no es troba en tots els repositoris debian i no és prou estable.
+El paquet Debian que porta DHCP duu per nom /isc-dhcp-server/, nom que s'usarà a partir d'ara. 
+
+[6] DHCP es troba sota llicència [[https://www.isc.org/downloads/software-support-policy/isc-license/][ISC License]]. Les versions de Kea es troben baix llicència [[https://www.mozilla.org/en-US/MPL/2.0/FAQ/][Mozilla Public License 2.0]].
+
+
+1- INSTAL·LACIÓ D'ISC-DHCP-SERVER
+
+Script d'instal·lació d'isc-dhcp-server:
+#+BEGIN_EXAMPLE
+/tmp/install-isc-dhcp-server.py
+#+END_EXAMPLE
+#+BEGIN_SRC python :tangle ./dev/config/network/dhcp/install-isc-dhcp-server.py
+#!/usr/bin/env python
+import os
+command = 'apt-get install -y isc-dhcp-server'
+os.system(command)
+#+END_SRC
+Llançament de l'script:
+#+BEGIN_SRC 
+$ chmod +r /tmp/install-isc-dhcp-server.py && /tmp/install-isc-dhcp-server.py
+#+END_SRC
+
+2- CONFIGURACIÓ D'ISC-DHCP-SERVER
+
+Si es té més d'una targeta de xarxa, s'ha d'especificar en quina interfície el servidor ha de gestionar el servei -bàsicament, respostes d'ips-. En qualsevol cas, sempre és recomanable especificar la interfíciei:
+#+BEGIN_EXAMPLE
+/etc/default/isc-dchp-server
+#+END_EXAMPLE
+#+BEGIN_SRC sh :tangle ./dev/config/network/dhcp/isc-dhcp-server
+# Defaults for isc-dhcp-server initscript
+# sourced by /etc/init.d/isc-dhcp-server
+# installed at /etc/default/isc-dhcp-server by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# Path to dhcpd's config file (default: /etc/dhcp/dhcpd.conf).
+#DHCPD_CONF=/etc/dhcp/dhcpd.conf
+
+# Path to dhcpd's PID file (default: /var/run/dhcpd.pid).
+#DHCPD_PID=/var/run/dhcpd.pid
+
+# Additional options to start dhcpd with.
+#       Don't use options -cf or -pf here; use DHCPD_CONF/ DHCPD_PID instead
+#OPTIONS=""
+
+# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#       Separate multiple interfaces with spaces, e.g. "eth0 eth1".
+INTERFACES="eth0"
+#+END_SRC
+El següent pas és configurar el servidor de dhcp pròpiament dit:
+#+BEGIN_EXAMPLE
+/etc/dhcp/dhcpd.conf
+#+END_EXAMPLE
+#+BEGIN_SRC sh :tangle ./dev/config/network/dhcp/dhcpd.conf
+# General configuration:
+default-lease-time 3600;
+max-lease-time 86400;
+option domain-name "domain.com";
+option domain-name-servers server.domain.com;
+authoritative; 
+log-facility local7;
+# specify network address and subnet-mask
+subnet 192.168.1.0 netmask 255.255.255.0 {
+     # specify the range of leased IP addresses
+     range 192.168.1.100 192.168.1.150;
+     # specify subnet-mask
+     option subnet-mask 255.255.255.0;
+     # specify broadcast address
+     option broadcast-address 192.168.1.255;
+     # specify default gateway
+     option-routers gateway.domain.com;
+}
+# dns updates:
+server-identifier server;
+ddns-updates on;
+ddns-update-style interim;
+ddns-domainname "domain.com.";
+ddns-rev-domainname "in-addr.arpa.";
+deny client-updates;
+include "/etc/bind/rndc.key";
+zone domain.com. {
+     primary 127.0.0.1;
+     key rndc-key;
+} 
+zone 1.168.192. in-addr.arpa. {
+     primary 127.0.0.1;
+     key rndc-key;
+} 
+#+END_SRC
+
+3- LLANÇAR ISC-DHCP-SERVER
+
+Per llançar el dimoni, s'obre una consola i s'insereix el codi:
+#+BEGIN_EXAMPLE
+$ systemctl restart isc-dhcp-server
+#+END_EXAMPLE
+*** TODO NTP
+
+    DEADLINE: <2017-04-12 Wed> SCHEDULED: <2017-04-12 Wed>
+
+# http://www.tecmint.com/install-and-configure-ntp-server-client-in-debian/
+
+[[http://www.ntp.org/][NTP]] [7], acrònim de =Network Time Protocol=, és un protocol que sincronitza els ordinadors d'una xarxa amb l'UTC, /Coordinated Universal Time/, amb un marge d'error d'alguns mil·lisegons. NTP usa un sistema jeràrquic de servidors, En el nivell més alt es troben els Stratum0, equipats amb unitats de temps atòmiques, etc. Aquests donen servei als Stratum1, i així successivament.  
+NTP fou dissenyat per un enginyer informàtic l'any 1983, i actualment és mantingut com un projecte open source.
+
+[7] NTP té llicènciá [[https://opensource.org/licenses/NTP][NTP License]].
+
+
+1- INSTAL·LACIÓ D'NTP
+
+Script d'nstal·lació:
+#+BEGIN_EXAMPLE
+/tmp/install-ntp.py
+#+END_EXAMPLE
+#+BEGIN_SRC python :tangle ./dev/config/network/ntp/install-ntp.py
+#!/usr/bin/env python
+import os
+command = 'apt-get install -y ntp'
+os.system(command)
+#+END_SRC
+Obrir un terminal i teclejar:
+#+BEGIN_SRC 
+$ chmod +r /tmp/install-ntp.py && /tmp/install-ntp.py
+#+END_SRC
+
+2- COFINGURACIÓ D'NTP
+
+El més important és la configuració dels servidors d'ntp; en aquest cas s'han triat els que té disponibles Debian:
+#+BEGIN_EXAMPLE
+/etc/ntp.conf
+#+END_EXAMPLE
+#+BEGIN_SRC sh :tangle ./dev/config/network/ntp/ntp.conf
+# /etc/ntp.conf, configuration for ntpd; see ntp.conf(5) for help
+driftfile /var/lib/ntp/ntp.drift
+# Enable this if you want statistics to be logged.
+#statsdir /var/log/ntpstats/
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+# You do need to talk to an NTP server or two (or three).
+#server ntp.your-provider.example
+# pool.ntp.org maps to about 1000 low-stratum NTP servers.  Your server will
+# pick a different set every time it starts up.  Please consider joining the
+# pool: <http://www.pool.ntp.org/join.html>
+#server 0.debian.pool.ntp.org iburst
+#server 1.debian.pool.ntp.org iburst
+#server 2.debian.pool.ntp.org iburst
+#server 3.debian.pool.ntp.org iburst
+# Access control configuration; see /usr/share/doc/ntp-doc/html/accopt.html for
+# details.  The web page <http://support.ntp.org/bin/view/Support/AccessRestrictions>
+# might also be helpful.
+#
+# Note that "restrict" applies to both servers and clients, so a configuration
+# that might be intended to block requests from certain clients could also end
+# up blocking replies from your own upstream servers.
+# By default, exchange time with everybody, but don't allow configuration.
+restrict -4 default kod notrap nomodify nopeer noquery
+#restrict -6 default kod notrap nomodify nopeer noquery
+# Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1
+restrict ::1
+# Clients from this (example!) subnet have unlimited access, but only if
+# cryptographically authenticated.
+#restrict 192.168.123.0 mask 255.255.255.0 notrust
+# If you want to provide time to your local subnet, change the next line.
+# (Again, the address is an example only.)
+#broadcast 192.168.123.255
+# If you want to listen to time broadcasts on your local subnet, de-comment the
+# next lines.  Please do this only if you trust everybody on the network!
+#disable auth
+#broadcastclient
+
+
+# CUSTOMIZATION
+# NIST SERVERS
+server time-a.nist.gov iburst
+server time-b.nist.gov iburst
+server time-c.nist.gov iburst
+server time-d.nist.gov iburst
+
+# By default, exchange time with everybody, but don't allow configuration.
+restrict -6 default kod notrap nomodify nopeer noquery
+
+# By default don't answer anything
+restrict default ignore
+
+# Allow hosts
+restrict 192.168.1.0 mask 255.255.255.0 limited kod modify notrap nopeer noquery
+
+# These lines allow this NTP server to query level 1 servers for time
+#server time-a.nist.gov
+server 129.6.15.28
+restrict 129.6.15.28 mask 255.255.255.255 nomodify notrap nopeer noquery
+#server time-b.nist.gov
+server 129.6.15.29
+restrict 129.6.15.29 mask 255.255.255.255 nomodify notrap nopeer noquery
+#server time-c.nist.gov
+server 129.6.15.30
+restrict 129.6.15.30 mask 255.255.255.255 nomodify notrap nopeer noquery
+#server time-d.nist.gov
+server 129.6.15.27
+restrict 129.6.15.27 mask 255.255.255.255 nomodify notrap nopeer noquery
+#+END_SRC
+Si només es vol sincronitzar amb servidors IPv4:
+#+BEGIN_EXAMPLE
+/etc/default/ntpd
+#+END_EXAMPLE
+#+BEGIN_SRC sh :tangle ./dev/config/network/ntp/ntp
+# Accept only ipv4
+NTPD_OPTS='-4 -g'
+#+END_SRC
+
+3- LLANÇAR NTP
+
+Com sempre, obrir un terminal i inserir la instrucció:
+#+BEGIN_SRC 
+$ systemctl restart ntp.service
+#+END_SRC
+Amb això s'acabaria el capítol relacionat amb la instal·lació dels servei de xarxa mínims que requereix un entorn linux en una empresa.
+** TODO Autenticació
+
+   DEADLINE: <2017-04-30 Sun> SCHEDULED: <2017-04-20 Thu>
+** TODO Sistema de fitxers
+
+   DEADLINE: <2017-05-13 Sat> SCHEDULED: <2017-05-02 Tue>
+
+** TODO Programari
+
+   DEADLINE: <2017-05-23 Tue> SCHEDULED: <2017-05-15 Mon>
+* Conclusions
+* Glossari
+* Bibliografia
+* Annexos

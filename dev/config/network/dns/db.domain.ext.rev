@@ -1,0 +1,14 @@
+$ORIGIN .
+$TTL 604800	; 1 week
+1.1.1.in-addr.arpa	IN SOA	server.domain.ext. root.domain.ext. (
+				5          ; serial
+				604800     ; refresh (1 week)
+				86400      ; retry (1 day)
+				2419200    ; expire (4 weeks)
+				604800     ; minimum (1 week)
+				)
+			NS	server.domain.ext.
+$ORIGIN 1.1.1.in-addr.arpa.
+1			PTR	server.domain.ext.
+$TTL 300	; 5 minutes
+2			PTR	client.domain.ext.

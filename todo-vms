@@ -1,0 +1,13 @@
+server  => base
+server1 => network
+server2 => network+directory
+server3 => network+directory+distribution
+server4 => network+directory+distribution+extended
+
+client  => base
+client1 => network
+client2 => network+directory
+client3 => network+directory+distribution
+client4 => network+directory+distribution+extended
+
+~/Downloads/papi/environment/env3 => network+directory+distribution

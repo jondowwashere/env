@@ -1,0 +1,18 @@
+; /var/cache/bind/db.domain.ext
+
+$ORIGIN domain.ext.
+$TTL 604800	; 1 week
+domain.ext		IN SOA	server.domain.ext. root.domain.ext. (
+				6          ; serial
+				604800     ; refresh (1 week)
+				86400      ; retry (1 day)
+				2419200    ; expire (4 weeks)
+				604800     ; minimum (1 week)
+				)
+;
+@		NS		server.domain.ext.
+@		MX	10	server.domain.ext.
+@		A		1.1.1.1
+
+; SERVERS
+server	A	1.1.1.1

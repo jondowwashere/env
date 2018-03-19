@@ -1,0 +1,18 @@
+# /etc/ldap/slapd.d/users-modify.ldif
+
+# FRANK ADAMS (modify email and delete phone)
+dn: uid=fadams,ou=users,dc=domain,dc=ext
+changetype: modify
+replace: mail
+mail: fadams@email.com
+-
+delete: homePhone
+
+# ANNE MANDELAY (modify email and add login shell)
+dn: uid=amandelay,ou=users,dc=domain,dc=ext
+changetype: modify
+replace: mail
+mail: amandelay@email.com
+-
+add: loginShell
+loginshell: /bin/bash

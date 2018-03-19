@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# This software is under the terms of the GNU General Public License v3
+
+# Name: connectvm
+# Usage: [bash\s|\./]connectvm [debian|bashserver|puppetserver|lamp|nagios|erpnext]
+# Description: Connects as root to remote virtual machine via ssh
+
+# LOCAL VARIABLES
+VM_NAME=$1
+MACHINE=`./network $VM_NAME`
+
+# CONNECT TO ADDRESS AS ROOT
+ssh root@$MACHINE

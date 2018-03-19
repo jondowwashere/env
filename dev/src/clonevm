@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# This software is under the terms of the GNU General Public License v3
+
+# Name: clonevm
+# Usage: [bash\s|\./]clonevm [existing_vm] [non_existing_vm]
+# Description: Clones the debian machine
+
+# LOCAL VARIABLES
+MACHINE=$1
+CURRENT_DIRECTORY=`pwd`
+VM_PATH=$CURRENT_DIRECTORY/vms
+VM_ORIGIN=$1
+VM_DESTINATION=$2
+VMS='vms'
+
+# REGISTER VIRTUAL MACHINE TO CLONE
+./registervm $VM_ORIGIN
+
+# CLONE DEBIAN VM
+vboxmanage clonevm $VM_ORIGIN --name $VM_DESTINATION
+
+# UNREGISTER DEBIAN AND $MACHINE VMS
+./unregistervm $VM_ORIGIN
+vboxmanage registervm /home/$USER/vms/$VM_DESTINATION/$VM_DESTINATION.vbox
+./unregistervm $VM_DESTINATION
+
+# MOVE BRAND NEW VM TO VMS DIRECTORY
+mv /home/$USER/$VMS/$VM_DESTINATION $VM_PATH

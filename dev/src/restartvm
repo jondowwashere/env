@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# This software is under the terms of the GNU General Public License v3
+
+# Name: restartvm 
+# Usage: [bash\s|\./]restartvm [debian|bashserver|puppetserver|lamp|nagios|erpnext]
+# Description: Starts a virtual machine
+
+# RESTART VIRTUAL MACHINE
+MACHINE=$1
+VBoxManage controlvm $MACHINE acpipowerbutton
+sleep 10
+VBoxManage startvm $MACHINE --type headless

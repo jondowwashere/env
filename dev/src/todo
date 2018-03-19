@@ -1,0 +1,106 @@
+Before start off, make sure server and client vms are available.
+
+1.   NETWORK
+1.1. SSH
+root@client:
+# apt-get install openssh-server openssh-client
+# cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+# vi /etc/ssh/sshd_config
+# reboot
+root@server:
+# connect-client
+1.2. DHCP
+root@server:
+# apt-get install isc-dhcp-server
+# cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.bak
+# vi /etc/dhcp/dhcpd.conf
+# cp /etc/default/isc-dhcp-server /etc/default/isc-dhcp-server.bak
+# vi /etc/default/isc-dhcp-server
+root@client:
+# cp /etc/network/interfaces /etc/network/interfaces.bak
+# vi /etc/network/interfaces
+restart server and client and check out if client is getting a correct ip.
+
+1.3. DNS
+root@server:
+# apt-get install bind9 dnsutils [dns-doc]
+# cp /etc/bind/named.conf.options /etc/bind/named.conf.options.bak
+# vi /etc/bind/named.conf.options
+# systemctl restart bind9
+# dig debian.org
+# dig debian.org
+# cp /etc/bind/named.conf.local /etc/bind/named.conf.local.bak
+# vi /etc/bind/named.conf.local
+# named-checkconf
+# cp /etc/bind/db.local /etc/bind/db.domain.ext
+# vi /etc/bind/db.domain.ext
+# named-checkconf
+# named-checkzone domain.ext. /etc/bind/db.domain.ext
+# cp /etc/bind/db.127 /etc/bind/db.domain.ext.reverse
+# vi /etc/bind/db.domain.ext.reverse
+# cp /etc/resolv.conf /etc/resolv.conf.bak
+# vi /etc/resolv.conf
+# systemctl restart bind9
+# nslookup domain.ext
+# nslookup server.domain.ext
+# nslookup 1.1.1.1
+1.3.1. DYNAMIC DNS
+root@server:
+# cd /etc/bind
+# dnssec-keygen -a HMAC-MD5 -b 128 -r /dev/urandom -n USER DDNS_UPDATE
+# vi Kddns_update.*.private
+# touch ddns.key
+# vi ddns.key (cp content from rndc.key and change key to that from Kddns_update.*.private)
+# cp ddns.key /etc/dhcp/
+# chown root:bind /etc/bind/ddns.key
+# chown root:root /etc/dhcp/ddns.key
+# chmod 640 /etc/bind/ddns.key
+# chmod 640 /etc/dhcp/ddns.key
+# vi /etc/bind/named.conf.local
+# vi /etc/bind/db.domain.ext
+# vi /etc/bind/db.domain.ext.rev
+# cd /var/cache
+# chmod 775 bind
+# cd bind
+# ln -s /etc/bind/db.domain.ext .
+# ln -s /etc/bind/db.domain.ext.rev .
+1.3.1.1. DCHCP CONFIGURATION FOR DDNS
+root@server:
+# vi /etc/dhcp/dhcpd.conf
+# /etc/init.d/isc-dhcp-server restart
+# /etc/init.d/bind9 restart
+1.3.2. TEST DNS AND AND DHCP UPDATES
+root@client:
+launch client machine
+root@server:
+# tail -f /var/log/syslog
+# nslookup client.domain.ext
+1.4 NTP
+root@server:
+# apt-get remove --auto-remove ntpdate
+# apt-get install ntp
+# cp /etc/ntp.conf /etc/ntp.conf.bak
+# vi /etc/ntp.conf
+# systemctl restart ntp
+# systemctl status ntp
+# ntpq -np
+root@client:
+# apt-get update
+# apt-get install ntpdate
+# ntpdate -d 1.1.1.1
+# cp /etc/default/ntpdate /etc/default/ntpdate.bak
+# vi /etc/default/ntpdate
+# systemctl restart ntpdate
+# ntpdate -d 1.1.1.1
+1.5 IPTABLES
+root@client:
+# mkdir /etc/iptables
+# touch /etc/iptables/iptables.sh
+# vi /etc/iptables/iptables.sh
+# cp /etc/rc.local /etc/rc.lcoal.bak
+# vi /etc/rc.local
+# reboot
+# iptables -nL
+# cp /etc/iptables/iptables.sh /etc/iptables/iptables.sh.bak
+# vi /etc/iptables/iptables.sh
+# reboot

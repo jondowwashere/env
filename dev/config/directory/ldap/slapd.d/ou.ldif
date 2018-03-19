@@ -1,0 +1,13 @@
+# /etc/ldap/slapd.d/ou.ldif
+
+# USERS
+dn: ou=users,dc=domain,dc=ext
+objectClass: organizationalUnit
+objectClass: top
+ou: users
+
+# GROUPS
+dn: ou=groups,dc=domain,dc=ext
+objectClass: organizationalUnit
+objectClass: top
+ou: groups

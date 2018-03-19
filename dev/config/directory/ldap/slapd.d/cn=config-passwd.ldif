@@ -1,0 +1,6 @@
+# /etc/ldap/slapd.d/cn=config-passwd.ldif
+
+dn: olcDatabase={0}config;cn=config
+changetype: modify
+add: olcRootPW
+olcRootPW: {SSHA}I/jLL3MctUz8XCFsQE0GDgHTiZnQhJ9j

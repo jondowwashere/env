@@ -1,0 +1,13 @@
+cron/*
+dev/src/vms/*
+pacs/*
+stuff/*
+README.aux
+README.html
+README.log
+README.md
+README.org
+README.out
+README.tex
+README.toc
+#README.org#

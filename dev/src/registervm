@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# This software is under the terms of the GNU General Public License v3
+
+# Name: registervm
+# Usage: [bash\s|\./]registervm [debian|bashserver|puppetserver|lamp|nagios|erpnext]
+# Description: Registers a virtual machine
+
+# LOCAL VARIABLES
+MACHINE=$1
+WORKING_DIRECTORY=`pwd`
+VM_PATH=vms/$MACHINE
+VM=$WORKING_DIRECTORY/$VM_PATH/$MACHINE.vbox
+
+# REGISTER DEBIAN
+VBoxManage registervm $VM

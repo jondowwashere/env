@@ -1,0 +1,17 @@
+# /etc/bind/named.conf.local
+
+include "/etc/bind/ddns.key";
+
+zone "domain.ext" {
+    type master;
+    notify no;
+    file "/var/cache/bind/db.domain.ext";
+    allow-update { key ddns-key; };
+};
+
+zone "1.1.1.in-addr.arpa" {
+    type master;
+    notify no;
+    file "/var/cache/bind/db.domain.ext.rev";
+    allow-update { key ddns-key; };
+};

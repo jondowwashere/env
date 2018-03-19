@@ -1,0 +1,47 @@
+#+TITLE:     Implementació d'un entorn de feina linux per a una empresa
+#+AUTHOR:    joan carles llompart i seguí
+#+EMAIL:     jcllompart@gmail.com
+#+latex_header: \hypersetup{colorlinks=true,linkcolor=black}
+
+* INTRODUCTION
+
+** CONTEXT AND JUSTIFICATION
+
+Assume the following fictional scenario. A newly incorporated company X is the need to install a computer system. After evaluating various options, decided to opt for a Linux environment.
+
+As for the initial hardware, the company will make an initial cost for the purchase of 20 computers and one server, in addition to its own telecommunications infrastructure.
+
+About linux environment, have been assessed significant distributions currently on the market, has opted for Debian and Ubuntu on the server to the desktop.
+
+In the selection of these operating systems must be taken into account aspects such as reliability, interoperability and ease of use.
+
+Debian and Ubuntu are a good set for the requirements of the company. Ubuntu Linux distribution is very widespread, widely used desktop computers to type, easy to install, with a user friendly interface. For an operating system derived from Debian packaging system uses / dpkg /, which will provide full interoperability between the server and the desktop. This feature, in principle, does not affect the system as a whole, but it is true that makes system administration simple. Instead, you choose Debian is a distribution server for very tested and reliable, and does not install extra packages such as Ubuntu.
+
+They have ruled out other distributions, such as CentOS or ArchLinux because although distributions are characteristics that make them powerful, are not so easy to handle user-level distributions as Ubuntu.
+
+** GOALS
+
+The main objective of the work is to create an infrastructure for a company under linux, and that this work properly.
+
+What is the main objective achieved, will have to achieve partial objectives as follows:
+- Creating a server GNU / Linux services:
+    + Network: DNS (Domain Name System), DHCP (Dynamic Host Configuration Protocol) and NTP (Network Time Protocol).
+    + Directory OpenLDAP (Open Lightweight Directory Access Protocol).
+    + Authentication: PAM (Pluggable Authentication Modules).
+    + Archives: NFS (Network File System).
+    & Distribution Software: Puppet.
+
+- Creation of several workstations GNU / Linux:
+    Login + Remote ssh vinegar.
+    + Client software: puppet.
+
+** APPROACH AND METHODOLOGY
+** WORK PLAN
+** SUMMARY OF PRODUCTS
+** DESCRIPTION
+* CHAPTERS
+* CONCLUSIONS
+* GLOSSARY
+* BIBLIOGRAPHY
+* ANNEX
+  
